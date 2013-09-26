@@ -14,7 +14,7 @@
 \usepackage{sectsty}
 \allsectionsfont{\normalfont\sffamily\bfseries}
 
-\usepackage{hyperref}
+\usepackage[breaklinks]{hyperref}
 
 \usepackage{courier}
 \usepackage{color}
@@ -26,7 +26,7 @@
 \usepackage{graphicx}
 \usepackage{subfig}
 
-\title{Hands on met de Raspberry Pi}
+\title{Hands-on met de Raspberry Pi}
 
 \begin{document}
   \maketitle
@@ -39,6 +39,11 @@ verbinden met de verschillende randapparatuur, hoe je de Raspberry
 Pi aanzet, en hoe je de Raspberry Pi de eerste keer configureert.
 Daarna wordt beschreven hoe je met de camera en de afstandssensor aan
 de slag kan.
+
+  Lees ook Sectie~\ref{sec:opruimen}, zelfs als je niet klaar bent met
+de opdrachten.  Daar staat immers beschreven hoe je de Raspberry Pi
+klaar maakt voor de volgende groep indien je in de eerste groep zit,
+en hoe je de software ontwerp labo's netjes achterlaat.
 
     \subsection{Benodigdheden}
 
@@ -53,6 +58,8 @@ de slag kan.
       \item USB WiFi dongle
       \item Raspberry Pi camera
       \item Micro USB adapter
+      \item HC SR04 Afstandssensor
+      \item 4 female to female jumper kabeltjes
     \end{enumerate}
 
   \section{De Raspberry Pi opstarten}
@@ -76,7 +83,7 @@ het slot.
 DVI ingang.  Op die manier hoef je geen kabels uit te trekken.  Kies
 de DVI ingang als \emph{source} voor de monitor.
 
-      \paragraph{USB toestellen} Sluit de USB hub aan op de USB poort
+      \paragraph{USB toestellen} Sluit de USB Hub aan op de USB poort
 van de Raspberry Pi.  Je gebruikt hiervoor de stekker waaruit twee
 draden vertrekken.  De Wifi dongle, het toetsenbord en de muis sluit
 je aan op de USB Hub.
@@ -88,14 +95,17 @@ sequentie.
 
     \subsection{Initi\"ele configuratie}
 
-      Wanneer je Raspbian voor het eerst opstart kom je na de start up
+      Wanneer je Raspbian voor het eerst opstart kom je na de start-up
 in de \texttt{raspi-config} configuratie tool.  Met deze tool kan je
 een aantal Raspberry Pi specifieke configuratie instellingen wijzigen.
 
       Als Raspbian reeds is opgestart van op deze SD kaart zal
 \texttt{raspi-config} niet geladen worden en zal je in de plaats
 daarvan het login scherm zien.  Normaal gezien zijn alle instellingen
-reeds in orde gebracht. 
+reeds in orde.  Je kan inloggen zoals beschreven in
+Sectie~\ref{sec:inloggen}.  Moest je later toch nog instellingen
+willen wijzigen kan dat door \texttt{raspi-config} manueel te starten
+zoals hieronder beschreven.
 
       Als je de \texttt{raspi-config} tool per ongeluk verlaat kan je
 deze terug starten door het volgende commando in de console te typen:
@@ -118,7 +128,7 @@ groter is gemaakt.
       \end{enumerate}
 
       \paragraph{Correcte toetsenbord layout kiezen}
-      De standaard instellingen voor de toetsenbord indeling komt niet
+      De standaard instellingen voor de toetsenbord indeling komen niet
 overeen met het toetsenbord dat jullie gekregen hebben.  Je moet het
 juiste toetsenbord selecteren door je instelling steeds verder te
 verfijnen.
@@ -131,7 +141,7 @@ verfijnen.
         \item Selecteer \texttt{English (US)}.
         \item Selecteer \texttt{English (US)} (helemaal bovenaan).
         \item Selecteer \texttt{The default for the keyboard layout}.
-        \item Selecteer \texttt{No compose key}
+        \item Selecteer \texttt{No compose key}.
         \item Selecteer \texttt{<Yes>} om via
 \texttt{Control+Alt+Backspace} de X server te kunnen stoppen.
       \end{enumerate}
@@ -166,10 +176,10 @@ instellingen hebt aangepast kan je best je Raspberry Pi rebooten.
 Selecteer \texttt{<Finish>} om \texttt{raspi-config} te be\"eindigen.
 Kies nadien voor \texttt{<Yes>} om te rebooten.
 
-    \subsection{Inloggen}
+    \subsection{Inloggen}\label{sec:inloggen}
 
       De Raspbian distributie komt met een standaard gebruiker:
-\texttt{pi} en paswoord \texttt{raspberry}.  Na het inloggen kom je in
+\texttt{\textbf pi} en paswoord \texttt{\textbf raspberry}.  Na het inloggen kom je in
 de standaard Linux console.  Je kan de grafische gebruikers interface
 starten met:
 
@@ -200,11 +210,10 @@ WiFi netwerken.
 dubbelklikken.  Dit opent een configuratie venster voor het
 \emph{eduroam} network.
 
-    Op de KULeuven ICTS pagina
-\url{https://admin.kuleuven.be/icts/english/wifi/eduroam-ubuntu} vind
+Op \url{https://admin.kuleuven.be/icts/english/wifi/eduroam-ubuntu} vind
 je hoe je het eduroam netwerk kan instellen op een Ubuntu Linux.  Het
 merendeel van de instellingen is identiek op Raspbian.
-Table~\ref{table:eduroam} geeft een overzicht van de configuratie
+Tabel~\ref{table:eduroam} geeft een overzicht van de configuratie
 nodig voor eduroam.
 
   \begin{table}[h!]
@@ -390,6 +399,14 @@ de Raspberry Pi 300 mA verbruikt kunnen de pinnen samen maar 200 mA
 leveren.  Voor sensoren zoals de afstandssensor is dit voldoende, voor
 het aansturen van een motor is dit wellicht niet voldoende.
 
+      Er bestaan voor verschillende programmeertalen libraries die het
+gebruik van de GPIO pinnen mogelijk maken.  Voor Python is er
+WiringPi\footnote{\url{https://projects.drogon.net/raspberry-pi/wiringpi/}}
+en RPi.GPIO\footnote{\url{https://pypi.python.org/pypi/RPi.GPIO}}.
+Voor Java is er Pi4J\footnote{\url{http://pi4j.com/}}. Naast
+bibliotheken om de GPIO pinnen te gebruiken kan je ook het
+\texttt{\\sysfs} bestandssysteem gebruiken.
+
     \subsubsection{Werking van de afstandssensor}
 
       De HC SR04 afstandssensor heeft 4 pinnen, gelabeled \emph{Vcc},
@@ -426,7 +443,7 @@ Raspberry Pi.  Connecteer de \emph{Gnd} pin van de sensor met pin 25
 (\texttt{Ground}) van de Raspberry Pi.  Connecteer de \emph{Trig} pin van de
 sensor met pin 7 (\texttt{GPIO4}) van de Raspberry Pi.  En connecteer tot
 slot de \emph{Echo} pin van de sensor met pin 11 (\texttt{GPIO17}).
-De uiteindelijke connecties moeten overeen komen met
+De uiteindelijke connecties moeten overeenkomen met
 Figuur~\ref{fig:sensor}.
 
 \begin{figure}[h!]
@@ -452,7 +469,7 @@ Om de code snel op de Pi te krijgen kan je volgend command gebruiken:
 pi@raspberrypi ~ $ wget -O distance.py http://goo.gl/X9ot8j
 \end{lstlisting}
 
-\lstinputlisting[language=Python,basicstyle={\footnotesize\ttfamily},label={lst:distance.py},caption={distance.py}]{code/distance.py}
+\lstinputlisting[numbers=left,numberstyle=\tiny,backgroundcolor=,captionpos=b,language=Python,basicstyle={\footnotesize\ttfamily},label={lst:distance.py},caption={distance.py},showstringspaces=false]{code/distance.py}
 
   Je kan het \texttt{distance.py} programma aanpassen met een editor
 zoals \texttt{leafpad}.  Nadien moet je het script uitvoerbaar maken
@@ -464,10 +481,131 @@ pi@raspberrypi ~ $ sudo ./distance.py
 \end{lstlisting}
 
   Van zodra het programma gestart is zie je de afstandswaarden voorbij
-komen.  Je kan het programma afsluiten met \texttt{Ctrl+c}.
+komen.  Je kan het programma afsluiten met \texttt{Ctrl+c}.  Als je
+het programma voor de tweede keer opstart zal je een foutboodschap te
+zien krijgen: \texttt{RuntimeWarning: This channel is already in use
+...}.  De GPIO pinnen zijn reeds ge\"initializeerd en de RPi.GPIO
+geeft daarom een waarschuwing.  Je mag deze foutboodschap negeren.
 
     \subsubsection{Sensor waarden uitlezen met Java}
 
-\end{document}
+    De Java JDK is standaard niet ge\"installeerd op Raspbian.
+Indien je de eerste gebruiker bent van deze Raspbian installatie zal je
+die zelf moeten installeren.  Dit kan je doen met het volgende commando:
+\begin{lstlisting}
+pi@raspberrypi ~ $ sudo apt-get update
+pi@raspberrypi ~ $ sudo apt-get install openjdk-7-jdk
+pi@raspberrypi ~ $ java -version
+\end{lstlisting}
 
+    Het installeren van de nodige software zal een tijdje duren.
+Nadien zou het \texttt{java} commando moeten werken.
+
+    Ook vanuit Java kan je de GPIO pinnen gebruiken.  De library die
+dit mogelijk maakt is Pi4J.  Om de library te gebruiken moet je code
+downloaden met het volgende commando:
+\begin{lstlisting}
+pi@raspberrypi ~ $ wget pi4j.googlecode.com/files/pi4j-0.0.5.zip
+pi@raspberrypi ~ $ unzip pi4j-0.0.5.zip
+\end{lstlisting}
+
+    Listing~\ref{lst:distance.java} toont voorbeeld code die gebruik
+maakt van Pi4J om de afstandssensor uit te lezen\footnote{Je kan deze
+code ook vinden op \url{http://goo.gl/dpOsxb}}.  PI4J gebruikt
+\emph{nog} een andere manier om de pinnen te addresseren.
+Figuur~\ref{fig:pi4j} toont de mapping in Pi4J.  Zowel de naam als de
+nummer in Figuur~\ref{fig:pi4j} zijn Pi4J specifiek.  Je kan de
+fysieke pin nummer gebruiken om de mapping te maken zoals in
+Tabel~\ref{table:mapping}.
+
+\begin{figure}[h!]
+  \centering
+  \includegraphics[width=.5\textwidth]{images/gpio-pi4j.png}
+  \caption{De pin nummering voor PI4J.  Onder \texttt{Pin \#} staat de
+nummer die PI4J gebruikt.  Onder \texttt{Name} de naam die PI4J
+gebruikt.  Naast de pinnen staat ten slotte nog de fysieke pin
+nummer.}
+  \label{fig:pi4j}
+\end{figure}
+
+\begin{table}[h!]
+  \centering
+  \begin{tabular}{l|ll}
+    \hline
+    \textbf{Fysieke pin nr.} & \textbf{RPi.GPIO label} & \textbf{Pi4J label} \\
+    \hline
+    7 & \texttt{GPIO04} & \texttt{RaspiPin.GPIO07} \\
+    11 & \texttt{GPIO17} & \texttt{RaspiPin.GPIO00} \\
+    \hline
+  \end{tabular}
+  \caption{Mapping tussen fysieke pin, RPi.GPIO en Pi4J labels.}
+  \label{table:mapping}
+\end{table}
+
+\lstinputlisting[numbers=left,numberstyle=\tiny,backgroundcolor=,captionpos=b,language=Java,basicstyle={\footnotesize\ttfamily},label={lst:distance.java},caption={DistanceMonitor.java},showstringspaces=false]{code/DistanceMonitor.java}
+
+  Je kan bovenstaande code compileren en uitvoeren met de volgende
+twee commandos.  Het eerste zorgt voor de compilatie.  Het tweede
+voert het programma uit en schrijft de waarden naar een
+\texttt{distance.csv} file.
+\lstset{basicstyle=\footnotesize\ttfamily}
+\begin{lstlisting}
+pi@raspberrypi ~ $ javac -cp pi4j-0.0.5/lib/pi4j-core.jar DistanceMonitor.java
+pi@raspberrypi ~ $ sudo java -cp pi4j-0.0.5/lib/pi4j-core.jar:. DistanceMonitor > distance.csv
+\end{lstlisting}
+
+  
+  \paragraph{Visualiseren van de sensor waarden.}  Om de data te
+visualiseren kan je R gebruiken.  Je kan R installeren op de Raspberry
+Pi met het volgende commando.  R is een erg uitgebreid pakket, de
+installatie kan even duren.
+\begin{lstlisting}
+pi@raspberrypi ~ $ sudo apt-get install r-base
+\end{lstlisting}
+
+  Eens R is ge\"installeerd kan je een sessie starten door in je
+console het volgende te typen:
+\begin{lstlisting}
+pi@raspberrypi ~ $ R
+\end{lstlisting}
+
+  In de R console geef je de volgende commando's.  De eerste twee
+installeren nuttige R bibliotheken.  Het downloaden en installeren kan
+lang duren.  Bij het installeren van de bibliotheken kan het zijn dat
+R vraagt waar hij ze moet downloaden (CRAN Mirror).  Hier kan je
+kiezen voor \emph{Belgium}.
+\begin{lstlisting}
+> install.packages( 'ggplot2' )
+> install.packages( 'zoo' )
+> distance.data = read.csv( 'distance.csv' )
+> colnames( distance.data ) = c( 'time', 'distance' )
+> distance.data$time = ( distance.data$time - min( distance.data$time ) ) / 1000
+> distance.data$smooth = rollmedian( distance.data$distance, 9, na.pad = T )
+> plot = ggplot( data = distance.data, aes( x = time ) )
+> plot = plot + geom_point( aes( y = distance ) )
+> plot = plot + geom_line( aes( y = smooth ) )
+> print( plot )
+\end{lstlisting}
+
+\section{Alles netjes achterlaten}\label{sec:opruimen}
+
+Het eduroam paswoord dat je gebruikte om de WiFi te connecteren wordt
+in plaintext opgeslagen.  Als je niet wil dat de studenten van de
+volgende groep het kunnen lezen verwijder je best de configuratie
+files.
+
+\begin{lstlisting}
+pi@raspberrypi ~ $ sudo rm /etc/wpa_supplicant/wpa_supplicant.conf
+\end{lstlisting}
+
+Daarnaast kan je ook de code die je hebt geschreven of gedownload
+verwijderen.  Zeker als je in de eerste groep studenten zit.
+
+Ten slotte zet je de Raspberry Pi door de Micro USB connectie te
+verbreken.  Verwijder ook alle randappartuur van de Raspberry Pi.
+
+Zet de invoer van de schermen terug op displayport en kijk na of ze
+een Ubuntu login scherm tonen.
+
+\end{document}
 % vim: tw=70 nocindent expandtab
